@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <title>Shopping Cart</title>
+</head>
+
+<body>
+    <h1>Shopping Cart</h1>
+
+
+    <div>
+        <ul>
+            <li>
+                <a class="add-to-cart" href="#" data-name="Apple" data-price="1.20">Apple $1.20</a>
+            </li>
+            <li>
+                <a class="add-to-cart" href="#" data-name="Banana" data-price="1.30">Banana $1.30</a>
+            </li>
+            <li>
+                <a class="add-to-cart" href="#" data-name="Orange" data-price="1.40">Orange $1.40</a>
+            </li>
+            <li>
+                <a class="add-to-cart" href="#" data-name="Kiwi" data-price="1.50">Kiwi $1.50</a>
+            </li>
+        </ul>
+        <button id="clear-cart"> Clear Cart</button>
+    </div>
+
+    <div>
+        <ul id="show-cart">
+            Cart is Empty
+        </ul>
+        <div>Total Cart: $
+            <span id="total-cart"></span>
+        </div>
+    </div>
+
+    
+    <script src="shoppingCart.js"></script>
+    <script>
+
+        $(".add-to-cart").click(function (event) {
+            event.preventDefault(); //prevents the links from doing their default behavior, i.e. refresh or jump to top of page
+            var name = $(this).attr("data-name"); //"this" represents the link you click on.  //attr allows you to access attribute "data-name"
+            var price = Number($(this).attr("data-price")); //Number to convert from string to number
+
+            addItemToCart(name, price, 1);
+            displayCart(); //display cart everytime we add an item
+        });
+
+        $("#clear-cart").click(function (event) {
+            clearCart();
+            displayCart();
+        });
+
+        //this will write list items into show cart
+        function displayCart() {
+            var cartArray = listCart();
+            var output = "";
+            for (var i in cartArray) { //building string
+                output += "<li>" + cartArray[i].name
+                    + " " + cartArray[i].count
+                    + " x " + cartArray[i].price
+                    + " = " + cartArray[i].total
+                    + " <button class='delete-item' data-name='"
+                    + cartArray[i].name + "'>X</button>"
+                    + "</li>";
+            }
+            $("#show-cart").html(output);
+            $("#total-cart").html(totalCart());
+        };
+
+        $("#show-cart").on("click", ".delete-item", function (event) { //did a click event occur on a delete-item
+            var name = $(this).attr("data-name");
+            removeItemFromCartAll(name);
+            displayCart();
+        });
+
+
+        displayCart();
+
+    </script>
+</body>
+
+</html>
